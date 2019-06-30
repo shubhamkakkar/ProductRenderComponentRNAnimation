@@ -1,24 +1,31 @@
 import React from "react";
 import {
     Dimensions,
-    ImageBackground,
-    ScrollView,
     SafeAreaView,
-    Animated
+    Animated,
+    View, StyleSheet
 } from "react-native";
 import {Headers, Footer} from "../../components";
 
 import {IProps} from "../../../type";
 
+
+type TBackgroundColor = string | "white"
+
+interface ISharedTransition extends IProps {
+    backgroundColor?: TBackgroundColor
+    children: React.ReactNode;
+}
+
 interface IState {
     footerOpen: boolean;
 }
 
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get("window");
+const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const AfooterHeightMax: number = SCREEN_HEIGHT * 0.75;
 
-export default class SharedTransition extends React.PureComponent<IProps, IState> {
+export default class SharedTransition extends React.PureComponent<ISharedTransition, IState> {
     state = {
         footerOpen: false
     };
@@ -78,62 +85,56 @@ export default class SharedTransition extends React.PureComponent<IProps, IState
         };
 
 
-       const {
-           headerRight,
-           headerLeft
-
-       } = this.props;
+        const {
+            //IProps
+            headerRight,
+            headerLeft,
+            widthOfRightHeader,
+            heightOfRightHeader,
+            //ISharedTransition
+            backgroundColor: wholeScreenBackgroundColor,
+            children
+        } = this.props;
         return (
             <SafeAreaView
                 style={{
-                    flex: 1
+                    flex: 1,
+                    backgroundColor: wholeScreenBackgroundColor
                 }}
             >
-                <ImageBackground
-                    source={{
-                        uri:
-                            "https://cdn.dribbble.com/users/3363793/screenshots/6707177/6.29.jpg"
-                    }}
-                    // @ts-ignore
+                <View style={{
+                    // flex: 1,
+                    position: "relative"
+                }}>
+                    <Headers {...{
+                        headerRight,
+                        headerLeft,
+                        widthOfRightHeader,
+                        heightOfRightHeader
+                    }}  />
+                </View>
+                <View style={StyleSheet.absoluteFill}>
+                    {children}
+                </View>
+                <Animated.View
                     style={{
-                        flex: 1,
-                        width: null,
-                        height: null
-                    }}
-                    imageStyle={{
-                        resizeMode: "cover",
-                        position: "absolute"
+                        // @ts-ignore
+                        height: this.AfooterHeight,
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        width: "100%"
                     }}
                 >
-                    <ScrollView
-                        style={{
-                            flex: 1
+                    <Footer
+                        onPress={() => this.animateFooter()}
+                        {...{
+                            animatedStyleOuter,
+                            animatedStyleInner
                         }}
-                        contentContainerStyle={{
-                            flexGrow: 1
-                        }}
-                    >
-                        <Headers {...{
-                            headerRight,
-                            headerLeft
-
-                        }}  />
-                    </ScrollView>
-                    <Animated.View
-                        style={{
-                            // @ts-ignore
-                            height: this.AfooterHeight
-                        }}
-                    >
-                        <Footer
-                            onPress={() => this.animateFooter()}
-                            {...{
-                                animatedStyleOuter,
-                                animatedStyleInner
-                            }}
-                        />
-                    </Animated.View>
-                </ImageBackground>
+                    />
+                </Animated.View>
+                {/*</ImageBackground>*/}
             </SafeAreaView>
         );
     }
