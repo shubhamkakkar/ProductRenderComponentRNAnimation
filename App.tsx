@@ -42,6 +42,10 @@ const HeaderRight = () => (
 const footerWrapperStye = {
     backgroundColor: "white"
 }
+
+const outerColor = "#fff"
+const innerColor = "#000"
+
 const FooterComponent = () => (
     <View
         style={[{
@@ -49,7 +53,6 @@ const FooterComponent = () => (
             borderTopLeftRadius: 40,
             borderTopRightRadius: 40,
             paddingHorizontal: 20,
-
         }, footerWrapperStye]}
     >
         <Text>Footer</Text>
@@ -63,7 +66,11 @@ export default function App() {
         widthOfRightHeader={"20%"}
         heightOfRightHeader={60}
         footerComponent={<FooterComponent/>}
-        {...{footerWrapperStye}}
+        {...{
+            footerWrapperStye,
+            innerColor,
+            outerColor
+        }}
     >
         <View style={{
             flex: 1,

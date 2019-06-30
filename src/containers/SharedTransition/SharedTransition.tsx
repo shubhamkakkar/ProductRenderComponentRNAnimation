@@ -17,6 +17,8 @@ interface ISharedTransition extends IProps {
     children: React.ReactNode;
     footerComponent: React.ReactNode;
     footerWrapperStye: {}
+    outerColor: string,
+    innerColor: string
 }
 
 interface IState {
@@ -26,6 +28,12 @@ interface IState {
 const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
 const AfooterHeightMax: number = SCREEN_HEIGHT * 0.75;
+
+const hexToRgb = (hex: any) =>
+    hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
+        , (m: number, r: number, g: number, b: number) => '#' + r + r + g + g + b + b)
+        .substring(1).match(/.{2}/g)
+        .map((x: string) => parseInt(x, 16));
 
 export default class SharedTransition extends React.PureComponent<ISharedTransition, IState> {
     state = {
@@ -67,15 +75,40 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
     }
 
     render() {
+        const {
+            //IProps
+            headerRight,
+            headerLeft,
+            widthOfRightHeader,
+            heightOfRightHeader,
+            footerComponent,
+            footerWrapperStye,
+            //ISharedTransition
+            backgroundColor: wholeScreenBackgroundColor,
+            children,
+        } = this.props;
+
+        let {
+            outerColor,
+            innerColor
+        } = this.props
+
+        if (outerColor.startsWith("#")) {
+            outerColor =  "rgb(" + hexToRgb(outerColor).join(",") + ")";
+        }
+        if (innerColor.startsWith("#")) {
+            innerColor =  "rgb(" +  hexToRgb(innerColor) + ")";
+        }
+
         // @ts-ignore
         const interpolateColorOuter = this.AfooterHeight.interpolate({
             inputRange: [0, AfooterHeightMax],
-            outputRange: ["rgb(246,60,100)", "rgb(107,51,202)"]
+            outputRange: [outerColor, innerColor]
         });
         // @ts-ignore
         const interpolateColorInner = this.AfooterHeight.interpolate({
             inputRange: [0, AfooterHeightMax],
-            outputRange: ["rgb(107,51,202)", "rgb(246,60,100)"]
+            outputRange: [innerColor, outerColor]
         });
 
         const animatedStyleOuter = {
@@ -87,18 +120,6 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
         };
 
 
-        const {
-            //IProps
-            headerRight,
-            headerLeft,
-            widthOfRightHeader,
-            heightOfRightHeader,
-            footerComponent,
-            footerWrapperStye,
-            //ISharedTransition
-            backgroundColor: wholeScreenBackgroundColor,
-            children
-        } = this.props;
         return (
             <SafeAreaView
                 style={{

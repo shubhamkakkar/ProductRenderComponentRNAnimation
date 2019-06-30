@@ -7,6 +7,7 @@ interface IFooter {
     animatedStyleInner: {};
     footerComponent: React.ReactNode;
     footerWrapperStye: {}
+
     //FooterView
 
 }
@@ -16,8 +17,10 @@ export default function Footer({
                                    animatedStyleOuter,
                                    animatedStyleInner,
                                    footerComponent,
-                                   footerWrapperStye
+                                   footerWrapperStye,
+
                                }: IFooter) {
+
     return (
         <>
             <View
@@ -43,7 +46,8 @@ export default function Footer({
                                     width: 20,
                                     borderRadius: 10,
                                     justifyContent: "center",
-                                    alignItems: "center"
+                                    alignItems: "center",
+                                    marginBottom: 20
                                 },
                                 animatedStyleOuter
                             ]}
