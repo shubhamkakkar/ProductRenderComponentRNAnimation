@@ -39,24 +39,40 @@ const HeaderRight = () => (
     </View>
 );
 
+const footerWrapperStye = {
+    backgroundColor: "white"
+}
+const FooterComponent = () => (
+    <View
+        style={[{
+            flex: 1,
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+            paddingHorizontal: 20,
+
+        }, footerWrapperStye]}
+    >
+        <Text>Footer</Text>
+    </View>
+)
 
 export default function App() {
     return <SharedTransition
         headerRight={<HeaderRight/>}
         headerLeft={<HeaderLeft/>}
         widthOfRightHeader={"20%"}
-        heightOfRightHeader={60}>
-
+        heightOfRightHeader={60}
+        footerComponent={<FooterComponent/>}
+        {...{footerWrapperStye}}
+    >
         <View style={{
             flex: 1,
             justifyContent: "center",
             alignItems: "center"
         }}>
             <Text>
-               PlaceYourBodyHere
+                PlaceYourBodyHere
             </Text>
         </View>
-
-
     </SharedTransition>;
 }

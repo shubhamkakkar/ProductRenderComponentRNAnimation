@@ -15,6 +15,8 @@ type TBackgroundColor = string | "white"
 interface ISharedTransition extends IProps {
     backgroundColor?: TBackgroundColor
     children: React.ReactNode;
+    footerComponent: React.ReactNode;
+    footerWrapperStye: {}
 }
 
 interface IState {
@@ -91,6 +93,8 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
             headerLeft,
             widthOfRightHeader,
             heightOfRightHeader,
+            footerComponent,
+            footerWrapperStye,
             //ISharedTransition
             backgroundColor: wholeScreenBackgroundColor,
             children
@@ -130,7 +134,9 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
                         onPress={() => this.animateFooter()}
                         {...{
                             animatedStyleOuter,
-                            animatedStyleInner
+                            animatedStyleInner,
+                            footerComponent,
+                            footerWrapperStye
                         }}
                     />
                 </Animated.View>
