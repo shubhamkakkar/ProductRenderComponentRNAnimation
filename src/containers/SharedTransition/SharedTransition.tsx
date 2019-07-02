@@ -7,18 +7,13 @@ import {
 } from "react-native";
 import {Headers, Footer} from "../../components";
 
-import {IProps} from "../../../type";
-
-
 type TBackgroundColor = string | "white"
 
-interface ISharedTransition extends IProps {
-    backgroundColor?: TBackgroundColor
-    children: React.ReactNode;
-    footerComponent: React.ReactNode;
-    footerWrapperStye: {}
+interface ISharedTransition {
     outerColor: string,
-    innerColor: string
+    innerColor: string,
+    footerMinHeight:number,
+    wholeScreenBackgroundColor?: TBackgroundColor
 }
 
 interface IState {
@@ -27,7 +22,7 @@ interface IState {
 
 const {height: SCREEN_HEIGHT} = Dimensions.get("window");
 
-const AfooterHeightMax: number = SCREEN_HEIGHT * 0.75;
+const AfooterMinHeightMax: number = SCREEN_HEIGHT * 0.75;
 
 const hexToRgb = (hex: any) =>
     hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
@@ -42,14 +37,14 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
 
     componentWillMount() {
         // @ts-ignore
-        this.AfooterHeight = new Animated.Value(60);
+        this.AfooterMinHeight = new Animated.Value(this.props.footerMinHeight);
     }
 
     openFooterAnimation() {
         Animated.parallel([
             // @ts-ignore
-            Animated.spring(this.AfooterHeight, {
-                toValue: AfooterHeightMax
+            Animated.spring(this.AfooterMinHeight, {
+                toValue: AfooterMinHeightMax
             })
         ]).start();
     }
@@ -57,8 +52,8 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
     closeFooterAnimation() {
         Animated.parallel([
             // @ts-ignore
-            Animated.spring(this.AfooterHeight, {
-                toValue: 60
+            Animated.spring(this.AfooterMinHeight, {
+                toValue: this.props.footerMinHeight
             })
         ]).start();
     }
@@ -76,21 +71,13 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
 
     render() {
         const {
-            //IProps
-            headerRight,
-            headerLeft,
-            widthOfRightHeader,
-            heightOfRightHeader,
-            footerComponent,
-            footerWrapperStye,
-            //ISharedTransition
-            backgroundColor: wholeScreenBackgroundColor,
             children,
         } = this.props;
 
         let {
             outerColor,
-            innerColor
+            innerColor,
+            wholeScreenBackgroundColor
         } = this.props
 
         if (outerColor.startsWith("#")) {
@@ -101,13 +88,13 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
         }
 
         // @ts-ignore
-        const interpolateColorOuter = this.AfooterHeight.interpolate({
-            inputRange: [0, AfooterHeightMax],
+        const interpolateColorOuter = this.AfooterMinHeight.interpolate({
+            inputRange: [0, AfooterMinHeightMax],
             outputRange: [outerColor, innerColor]
         });
         // @ts-ignore
-        const interpolateColorInner = this.AfooterHeight.interpolate({
-            inputRange: [0, AfooterHeightMax],
+        const interpolateColorInner = this.AfooterMinHeight.interpolate({
+            inputRange: [0, AfooterMinHeightMax],
             outputRange: [innerColor, outerColor]
         });
 
@@ -129,14 +116,8 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
             >
                 <View style={{
                     // flex: 1,
-                    position: "relative"
                 }}>
-                    <Headers {...{
-                        headerRight,
-                        headerLeft,
-                        widthOfRightHeader,
-                        heightOfRightHeader
-                    }}  />
+                    <Headers />
                 </View>
                 <View style={StyleSheet.absoluteFill}>
                     {children}
@@ -144,7 +125,7 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
                 <Animated.View
                     style={{
                         // @ts-ignore
-                        height: this.AfooterHeight,
+                        height: this.AfooterMinHeight,
                         position: "absolute",
                         bottom: 0,
                         left: 0,
@@ -156,12 +137,9 @@ export default class SharedTransition extends React.PureComponent<ISharedTransit
                         {...{
                             animatedStyleOuter,
                             animatedStyleInner,
-                            footerComponent,
-                            footerWrapperStye
                         }}
                     />
                 </Animated.View>
-                {/*</ImageBackground>*/}
             </SafeAreaView>
         );
     }

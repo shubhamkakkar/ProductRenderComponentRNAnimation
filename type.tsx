@@ -4,7 +4,8 @@ export interface IProps {
     headerRight: React.ReactNode,
     headerLeft: React.ReactNode,
     widthOfRightHeader: string,
-    heightOfRightHeader: number
+    heightOfRightHeader: number,
+    headerWrapperStyle: {}
 }
 
 

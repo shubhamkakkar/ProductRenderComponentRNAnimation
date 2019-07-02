@@ -1,71 +1,87 @@
 import React from "react";
-import {View, Text, TouchableWithoutFeedback, Animated} from "react-native";
+import {View, TouchableWithoutFeedback, Animated, ScrollView} from "react-native";
+import {
+    FooterPropConsumer
+} from "../../context/footerContext/footerContext"
 
 interface IFooter {
     onPress: () => void;
     animatedStyleOuter: {};
     animatedStyleInner: {};
+}
+
+
+interface IFooterContext {
     footerComponent: React.ReactNode;
-    footerWrapperStye: {}
-
-    //FooterView
-
+    footerBackgroundColor: {}
 }
 
 export default function Footer({
                                    onPress,
                                    animatedStyleOuter,
                                    animatedStyleInner,
-                                   footerComponent,
-                                   footerWrapperStye,
-
                                }: IFooter) {
 
     return (
-        <>
-            <View
-                style={[{
-                    flex: 1,
-                    justifyContent: "center",
-                }, ]}
-            >
-                {
-                    footerComponent
-                }
-                <View
+        <FooterPropConsumer>
+            {
+                ({
+                     footerComponent,
+                     footerBackgroundColor,
+
+                 }: IFooterContext) => <View
                     style={[{
+                        flex: 1,
                         justifyContent: "center",
-                        alignItems: "center"
-                    }, footerWrapperStye]}
+                    },]}
                 >
-                    <TouchableWithoutFeedback {...{onPress}}>
-                        <Animated.View
-                            style={[
-                                {
-                                    height: 20,
-                                    width: 20,
-                                    borderRadius: 10,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginBottom: 20
-                                },
-                                animatedStyleOuter
-                            ]}
-                        >
+                    <ScrollView
+                        style={{
+                            flex: 1
+                        }}
+                        contentContainerStyle={{
+                            flexGrow: 1
+                        }}
+                    >
+                        {
+                            footerComponent
+                        }
+                    </ScrollView>
+                    <View
+                        style={[{
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }, footerBackgroundColor]}
+                    >
+                        <TouchableWithoutFeedback {...{onPress}}>
                             <Animated.View
                                 style={[
                                     {
-                                        height: 10,
-                                        width: 10,
-                                        borderRadius: 5
+                                        height: 20,
+                                        width: 20,
+                                        borderRadius: 10,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        marginVertical: 5
                                     },
-                                    animatedStyleInner
+                                    animatedStyleOuter
                                 ]}
-                            />
-                        </Animated.View>
-                    </TouchableWithoutFeedback>
+                            >
+                                <Animated.View
+                                    style={[
+                                        {
+                                            height: 10,
+                                            width: 10,
+                                            borderRadius: 5
+                                        },
+                                        animatedStyleInner
+                                    ]}
+                                />
+                            </Animated.View>
+                        </TouchableWithoutFeedback>
+                    </View>
                 </View>
-            </View>
-        </>
+            }
+        </FooterPropConsumer>
     );
 }
